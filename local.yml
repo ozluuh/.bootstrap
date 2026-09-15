@@ -1,0 +1,119 @@
+---
+- name: Bootstrap bare environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: "Load: variables"
+      ansible.builtin.include_vars:
+        file: vars/main.yml
+
+    - name: Check minimum requirements met
+      block:
+        - name: "Install: 'kewlfft.aur' via ansible-galaxy"
+          ansible.builtin.command: ansible-galaxy collection install kewlfft.aur
+          changed_when: false
+
+        - name: "Download: 'GPG keys'"
+          ansible.builtin.get_url:
+            url: "{{ gpg.url }}"
+            dest: "{{ gpg.output }}"
+            mode: '0644'
+          loop: "{{ gpg_keys }}"
+          loop_control:
+            loop_var: gpg
+            label: "{{ gpg.name }} key"
+
+        - name: "Import: 'GPG keys'"
+          ansible.builtin.command:
+            cmd: "gpg --import {{ gpg.output }}"
+          register: gpg_import_result
+          changed_when: "'imported:' in gpg_import_result.stderr or 'new signatures:' in gpg_import_result.stderr"
+          loop: "{{ gpg_keys }}"
+          loop_control:
+            loop_var: gpg
+            label: "{{ gpg.name }} key"
+
+        - name: "Remove: 'GPG' temporary files"
+          ansible.builtin.file:
+            path: "{{ gpg.output }}"
+            state: absent
+          changed_when: false
+          loop: "{{ gpg_keys }}"
+          loop_control:
+            loop_var: gpg
+            label: "{{ gpg.name }} key"
+
+    - name: Check minimum packages met
+      block:
+        - name: "Ensure: 'dev-tools' dependencies"
+          community.general.pacman:
+            name:
+             - base-devel
+             - git
+             - curl
+            state: present
+            update_cache: true
+          become: true
+          register: pacman_install_result
+          changed_when: pacman_install_result.changed == true
+
+        - name: "Create: 'temporary' user"
+          ansible.builtin.user:
+            name: "{{ builder.account }}"
+            create_home: true
+            group: wheel
+            state: present
+          become: true
+
+        - name: "Modify: allow 'temporary' user run pacman without password"
+          ansible.builtin.copy:
+            content: "{{ builder.account }} ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+            dest: "{{ builder.sudoer_file }}"
+            mode: '0440'
+            validate: '/usr/sbin/visudo -cf %s'
+          become: true
+
+        - name: "Download: 'YAY' repository"
+          ansible.builtin.git:
+            repo: 'https://aur.archlinux.org/yay.git'
+            dest: "{{ builder.tmp_build_tool_directory }}"
+            clone: true
+            update: true
+          become: true
+          become_user: "{{ builder.account }}"
+          register: result_clone_repo_yay
+          changed_when: result_clone_repo_yay.changed != true
+
+        - name: "Compile: 'YAY' binary"
+          ansible.builtin.command:
+            cmd: 'makepkg -si --noconfirm'
+            chdir: "{{ builder.tmp_build_tool_directory }}"
+          become: true
+          become_user: "{{ builder.account }}"
+          when: result_clone_repo_yay is succeeded
+          register: result_build_binary_yay
+          changed_when: "'is up to date' not in result_build_binary_yay.stderr"
+
+        - name: "Install: required 'packages'"
+          kewlfft.aur.aur:
+            name: "{{ packages.aur }}"
+            state: present
+            use: yay
+            aur_only: yes
+          become: true
+          become_user: "{{ builder.account }}"
+          when: result_build_binary_yay is succeeded
+
+        - name: "Remove: permission from 'temporary' user to run pacman without password"
+          ansible.builtin.file:
+            path: "{{ builder.sudoer_file }}"
+            state: absent
+          become: true
+
+        - name: "Remove: 'temporary' user"
+          ansible.builtin.user:
+            name: "{{ builder.account }}"
+            state: absent
+            remove: true # Excludes home folder
+          become: true
