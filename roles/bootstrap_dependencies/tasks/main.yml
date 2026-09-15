@@ -5,7 +5,7 @@
     deps: "{{ common_deps + extra_deps }}"
 
 - name: "Install: 'Linux' dependencies"
-  when: ansible_facts['distribution'] == "Linux"
+  when: ansible_facts['system'] == "Linux"
   block:
     - name: "Install: 'Arch Linux' dependencies"
       when: ansible_facts['distribution'] == "Archlinux"
@@ -22,7 +22,7 @@
         update_cache: true
 
 - name: "Install: 'Ansible' dependencies"
-  when: ansible_facts['distribution'] == "Linux"
+  when: ansible_facts['system'] == "Linux"
   block:
     - name: "Install: 'Ansible Common collections' dependencies"
       ansible.builtin.command: ansible-galaxy collection install community.general
