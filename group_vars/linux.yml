@@ -1,0 +1,6 @@
+---
+flatpak_packages:
+  - be.alexandervanhee.gradia
+
+extra_deps:
+  - flatpak

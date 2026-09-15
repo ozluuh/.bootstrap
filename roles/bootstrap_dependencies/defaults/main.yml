@@ -1,0 +1,6 @@
+---
+arch_deps:
+  - base-devel
+
+debian_deps:
+  - build-essential

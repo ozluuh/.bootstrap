@@ -1,0 +1,9 @@
+---
+packages_aur_default:
+  - 1password
+  - 1password-cli
+
+gpg_keys_default:
+  - name: "1Password"
+    url: "https://downloads.1password.com/linux/keys/1password.asc"
+    output: "/tmp/1password.asc"

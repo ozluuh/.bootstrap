@@ -1,0 +1,21 @@
+---
+# roles/flatpak_packages/tasks/main.yml
+- name: "Install: 'Flatpak' packages"
+  when:
+    - ansible_facts['system'] == "Linux"
+    - (packages_flatpak_default | length > 0) or (flatpak_packages | length > 0)
+  block:
+    - name: "Init: 'read' packages"
+      ansible.builtin.set_fact:
+        packages: "{{ packages_flatpak_default + flatpak_packages }}"
+
+    - name: "Check: 'Flatpak' setup task"
+      ansible.builtin.include_tasks: "../../../shared_tasks/linux/setup_flatpak.yml"
+
+    - name: "Sync: 'Flatpak' packages"
+      loop: "{{ packages }}"
+      loop_control:
+        loop_var: flatpak
+      community.general.flatpak:
+        name: "{{ flatpak }}"
+        state: present

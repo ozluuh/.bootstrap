@@ -1,0 +1,13 @@
+---
+- name: "Remove: permission from 'temporary' user to run pacman without password"
+  ansible.builtin.file:
+    path: "{{ builder.sudoer_file }}"
+    state: absent
+  become: true
+
+- name: "Remove: 'temporary' user"
+  ansible.builtin.user:
+    name: "{{ builder.account }}"
+    state: absent
+    remove: true # Excludes home folder
+  become: true

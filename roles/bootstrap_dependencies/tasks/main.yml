@@ -1,0 +1,34 @@
+---
+# roles/bootstrap_dependencies/tasks/main.yml
+- name: "Init: 'read' packages"
+  ansible.builtin.set_fact:
+    deps: "{{ common_deps + extra_deps }}"
+
+- name: "Install: 'Linux' dependencies"
+  when: ansible_facts['distribution'] == "Linux"
+  block:
+    - name: "Install: 'Arch Linux' dependencies"
+      when: ansible_facts['distribution'] == "Archlinux"
+      ansible.builtin.pacman:
+        name: "{{ arch_deps + deps }}"
+        state: present
+        update_cache: true
+
+    - name: "Install: 'Debian/Ubuntu' dependencies"
+      when: ansible_facts['os_family'] == "Debian"
+      ansible.builtin.apt:
+        name: "{{ debian_deps + deps }}"
+        state: present
+        update_cache: true
+
+- name: "Install: 'Ansible' dependencies"
+  when: ansible_facts['distribution'] == "Linux"
+  block:
+    - name: "Install: 'Ansible Common collections' dependencies"
+      ansible.builtin.command: ansible-galaxy collection install community.general
+      changed_when: false
+
+    - name: "Install: 'Ansible Arch collections' dependencies"
+      when: ansible_facts['distribution'] == "Archlinux"
+      ansible.builtin.command: ansible-galaxy collection install kewlfft.aur
+      changed_when: false

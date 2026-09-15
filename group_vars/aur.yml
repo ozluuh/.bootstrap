@@ -1,0 +1,17 @@
+---
+builder: # used to install AUR packages
+  account: aur_builder
+  sudoer_file: "/etc/sudoers.d/10-{{ builder.account }}-aur-privileges"
+  tmp_build_tool_directory: "/home/{{ builder.account }}/yay-bin"
+
+gpg_keys: [] # remove this 'empty' if have keys, sample below
+  # - name: "Name to show in log"
+  #   url: "https://downloads.com/keys/gpg_key.asc"
+  #   output: "/tmp/gpg_key.asc"
+
+native_packages:
+  - bat
+
+aur_packages:
+  - visual-studio-code-bin
+  - papirus-icon-theme-git

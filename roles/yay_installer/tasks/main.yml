@@ -1,0 +1,33 @@
+---
+# roles/yay_installer/tasks/main.yml
+- name: "Check: 'Yay' binary"
+  ansible.builtin.shell: command -v yay
+  register: command_check
+  ignore_errors: true
+  changed_when: false
+  when: ansible_facts['distribution'] == "Archlinux"
+
+- name: "Install: 'Arch Linux' dependencies"
+  when:
+    - ansible_facts['distribution'] == "Archlinux"
+    - command_check.rc | default(1) != 0
+  block:
+    - name: "Import: 'create' user task"
+      ansible.builtin.include_tasks: "../../../shared_tasks/archlinux/create_builder_user.yml"
+
+    - name: "Download: 'YAY' repository"
+      ansible.builtin.git:
+        repo: 'https://aur.archlinux.org/yay.git'
+        dest: "{{ builder.tmp_build_tool_directory }}"
+      become: true
+      become_user: "{{ builder.account }}"
+
+    - name: "Compile: 'YAY' binary"
+      ansible.builtin.command:
+        cmd: 'makepkg -si --noconfirm'
+        chdir: "{{ builder.tmp_build_tool_directory }}"
+      become: true
+      become_user: "{{ builder.account }}"
+
+    - name: "Import: 'remove' user task"
+      ansible.builtin.include_tasks: "../../../shared_tasks/archlinux/remove_builder_user.yml"

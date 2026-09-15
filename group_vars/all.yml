@@ -1,0 +1,15 @@
+---
+# On Distro vars files, replace this to sync packages
+native_packages: []
+
+# On OS vars files, replace this to sync dependencies
+extra_deps: []
+
+# CLI tools/utilities MUST have
+# On Linux: native packages
+# On Mac: brew/ports tools
+common_deps:
+  - git
+  - curl
+  - zsh
+  - fzf

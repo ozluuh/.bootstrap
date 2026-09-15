@@ -1,0 +1,66 @@
+---
+# roles/aur_packages/tasks/main.yml
+- name: "Install: 'GPG' aur packages keys"
+  when:
+    - ansible_facts['distribution'] == "Archlinux"
+    - (gpg_keys_default | length > 0) or (gpg_keys | length > 0)
+  block:
+    - name: "Init: 'read' GPG keys"
+      ansible.builtin.set_fact:
+        aur_gpg_keys: "{{ gpg_keys_default + gpg_keys }}"
+
+    - name: "Download: 'GPG' keys"
+      ansible.builtin.get_url:
+        url: "{{ gpg.url }}"
+        dest: "{{ gpg.output }}"
+        mode: '0644'
+      loop: "{{ aur_gpg_keys }}"
+      loop_control:
+        loop_var: gpg
+        label: "{{ gpg.name }} key"
+
+    - name: "Import: 'GPG keys'"
+      ansible.builtin.command:
+        cmd: "gpg --import {{ gpg.output }}"
+      register: gpg_import_result
+      changed_when: "'imported:' in gpg_import_result.stderr or 'new signatures:' in gpg_import_result.stderr"
+      loop: "{{ aur_gpg_keys }}"
+      loop_control:
+        loop_var: gpg
+        label: "{{ gpg.name }} key"
+
+    - name: "Remove: 'GPG' temporary files"
+      ansible.builtin.file:
+        path: "{{ gpg.output }}"
+        state: absent
+      changed_when: false
+      loop: "{{ aur_gpg_keys }}"
+      loop_control:
+        loop_var: gpg
+        label: "{{ gpg.name }} key"
+
+- name: "Install: 'AUR' packages"
+  when:
+    - ansible_facts['distribution'] == "Archlinux"
+    - (packages_aur_default | length > 0) or (aur_packages | length > 0)
+  block:
+    - name: "Init: 'read' packages"
+      ansible.builtin.set_fact:
+        packages: "{{ packages_aur_default + aur_packages }}"
+
+    - name: "Import: 'create' user task"
+      ansible.builtin.include_tasks: "../../../shared_tasks/archlinux/create_builder_user.yml"
+
+    - name: "Sync: 'AUR' packages"
+      kewlfft.aur.aur:
+        name: "{{ packages }}"
+        state: latest
+        use: yay
+        aur_only: yes
+      become: true
+      become_user: "{{ builder.account }}"
+      register: aur_packages_result
+      changed_when: aur_packages_result.changed == true
+
+    - name: "Import: 'remove' user task"
+      ansible.builtin.include_tasks: "../../../shared_tasks/archlinux/remove_builder_user.yml"
