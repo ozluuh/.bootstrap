@@ -1,0 +1,11 @@
+---
+# roles/fancy_shell/tasks/main.yml
+- name: "Install: 'CLI' tools"
+  when:
+    - ansible_facts['system'] != "Win32NT" # TODO: add support to Windows
+    - item.enabled | default(false)
+  ansible.builtin.include_tasks:
+    file: "roles/fancy_shell/tasks/tools/{{ item.name | lower | replace(' ', '_') }}.yml"
+  loop: "{{ shell_tools }}"
+  loop_control:
+    label: "{{ item.name }} - {{ item.site }}"

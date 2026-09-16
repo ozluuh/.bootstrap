@@ -3,6 +3,8 @@
   hosts: localhost, all
   become: true
   gather_facts: true
+  vars:
+    dotfiles_user: "{{ ansible_facts['env'].SUDO_USER | default(lookup('env', 'USER')) }}"
 
   pre_tasks:
     - name: "Init: inject 'All' variables"
@@ -54,3 +56,9 @@
       tags:
         - flatpak
         - apps
+
+    - name: fancy_shell
+      tags:
+        - shell
+        - console
+        - cli

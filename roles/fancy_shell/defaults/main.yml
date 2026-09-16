@@ -1,0 +1,28 @@
+---
+shell_tools:
+  - name: Oh My Posh
+    description: The most customizable and fastest prompt engine for any shell.
+    enabled: true
+    site: "https://ohmyposh.dev/"
+  - name: Proto
+    description: Proto is a pluggable version manager, a unified toolchain.
+    site: "https://moonrepo.dev/docs/proto"
+    enabled: false
+  - name: SDKMAN
+    description: |
+      Your reliable companion for effortlessly managing
+      multiple Software Development Kits on Unix systems.
+    site: "https://sdkman.io/"
+    enabled: false
+  - name: Antigen
+    description: |
+      Antigen is a small set of functions that
+      help you easily manage your shell (zsh) plugins, called bundles.
+    site: "https://github.com/zsh-users/antigen"
+    enabled: false
+  - name: Zinit
+    description: |
+      Zinit is a flexible and fast Zshell plugin manager that will
+      allow you to install everything from GitHub and other sites.
+    site: "https://github.com/zdharma-continuum/zinit"
+    enabled: false
