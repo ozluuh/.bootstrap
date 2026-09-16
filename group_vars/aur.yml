@@ -10,6 +10,7 @@ gpg_keys: [] # remove this 'empty' if have keys, sample below
   #   output: "/tmp/gpg_key.asc"
 
 native_packages:
+  - firefox
   - github-cli
   # Fonts
   - noto-fonts
