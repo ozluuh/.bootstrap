@@ -10,7 +10,16 @@ gpg_keys: [] # remove this 'empty' if have keys, sample below
   #   output: "/tmp/gpg_key.asc"
 
 native_packages:
-  - bat
+  - github-cli
+  # Fonts
+  - noto-fonts
+  - noto-fonts-cjk
+  - noto-fonts-emoji
+  - ttf-dejavu
+  - ttf-firacode-nerd
+  - ttf-cascadia-code-nerd
+  # AppImage
+  - fuse2
 
 aur_packages:
   - visual-studio-code-bin
