@@ -9,7 +9,16 @@ extra_deps: []
 # On Linux: native packages
 # On Mac: brew/ports tools
 common_deps:
-  - git
-  - curl
-  - zsh
-  - fzf
+  - bat # github.com/sharkdp/bat
+  - curl # curl.se/
+  - eza # github.com/eza-community/eza
+  - fd # github.com/sharkdp/fd
+  - fzf # github.com/junegunn/fzf
+  - git # git-scm.com/
+  - git-delta # dandavison.github.io/delta
+  - jq # jqlang.github.io/jq
+  - ripgrep # github.com/BurntSushi/ripgrep
+  - unzip # infozip.sourceforge.net/UnZip.html
+  - zoxide # github.com/ajeetdsouza/zoxide
+  - zsh # zsh.org/
+
