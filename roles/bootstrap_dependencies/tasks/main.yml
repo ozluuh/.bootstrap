@@ -25,10 +25,12 @@
   when: ansible_facts['system'] == "Linux"
   block:
     - name: "Install: 'Ansible Common collections' dependencies"
-      ansible.builtin.command: ansible-galaxy collection install community.general
+      ansible.builtin.shell:
+        cmd: ansible-galaxy collection install community.general
       changed_when: false
 
     - name: "Install: 'Ansible Arch collections' dependencies"
       when: ansible_facts['distribution'] == "Archlinux"
-      ansible.builtin.command: ansible-galaxy collection install kewlfft.aur
+      ansible.builtin.shell:
+        cmd: ansible-galaxy collection install kewlfft.aur
       changed_when: false
