@@ -12,6 +12,7 @@ common_deps:
   - bat # github.com/sharkdp/bat
   - curl # curl.se/
   - eza # github.com/eza-community/eza
+  - fastfetch # github.com/fastfetch-cli/fastfetch
   - fd # github.com/sharkdp/fd
   - fzf # github.com/junegunn/fzf
   - git # git-scm.com/
