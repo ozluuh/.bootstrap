@@ -1,0 +1,9 @@
+---
+- name: Setup Ansible
+  hosts: localhost, all
+  become: false
+
+  tasks:
+    - name: "Install: 'Ansible' required collections"
+      ansible.builtin.shell:
+        cmd: ansible-galaxy install --ignore-errors -r requirements.yml

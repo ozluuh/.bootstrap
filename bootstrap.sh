@@ -16,6 +16,7 @@ install_on_fedora() {
 
 run_bootstrap() {
     echo ">>> Bootstrap: Start."
+    ansible-pull -U https://github.com/ozluuh/.bootstrap.git setup.yml
     ansible-pull --ask-become-pass -U https://github.com/ozluuh/.bootstrap.git local.yml
     echo ">>> Bootstrap: Complete."
 }
