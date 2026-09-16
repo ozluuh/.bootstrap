@@ -10,4 +10,5 @@
     name: "{{ builder.account }}"
     state: absent
     remove: true # Excludes home folder
+    force: true
   become: true
