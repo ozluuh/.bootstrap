@@ -1,6 +1,7 @@
 ---
 flatpak_packages:
   - be.alexandervanhee.gradia
+  - it.mijorus.gearlever
 
 extra_deps:
   - flatpak
