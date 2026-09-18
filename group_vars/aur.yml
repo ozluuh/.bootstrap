@@ -10,7 +10,11 @@ gpg_keys: [] # remove this 'empty' if have keys, sample below
   #   output: "/tmp/gpg_key.asc"
 
 native_packages:
+  # Terminal
+  - bash-completion
+  # GUI
   - firefox
+  # Tool
   - github-cli
   # Fonts
   - noto-fonts
