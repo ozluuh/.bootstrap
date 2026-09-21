@@ -3,11 +3,11 @@ shell_tools:
   - name: Oh My Posh
     description: The most customizable and fastest prompt engine for any shell.
     enabled: true
-    site: "https://ohmyposh.dev/"
+    site: "https://ohmyposh.dev"
   - name: Proto
     description: Proto is a pluggable version manager, a unified toolchain.
-    site: "https://moonrepo.dev/docs/proto"
-    enabled: false
+    site: "https://moonrepo.dev"
+    enabled: true
   - name: SDKMAN
     description: |
       Your reliable companion for effortlessly managing

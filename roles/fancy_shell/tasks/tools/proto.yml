@@ -1,0 +1,26 @@
+---
+# roles/fancy_shell/tasks/tools/proto.yml
+- name: "Install: '{{ item.name }}' prompt engine"
+  become: true
+  become_user: "{{ dotfiles_user }}"
+  vars:
+    destination_directory: ~/.proto
+    destination_script: "/tmp/install-{{ item.name | lower | replace(' ', '-') }}.sh"
+  block:
+    - name: "Download: '{{ item.name }} installer' script"
+      ansible.builtin.get_url:
+        url: "{{ item.site }}/install/proto.sh"
+        dest: "{{ destination_script }}"
+        mode: '0755'
+
+    - name: "Install: run 'installer'"
+      ansible.builtin.command:
+        cmd: "{{ destination_script }} --no-profile --yes"
+      changed_when: false
+
+    - name: Clean up temporary installer script
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        path: "{{ destination_script }}"
+        state: absent
