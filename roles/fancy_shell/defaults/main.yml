@@ -14,15 +14,3 @@ shell_tools:
       multiple Software Development Kits on Unix systems.
     site: "https://sdkman.io/"
     enabled: false
-  - name: Antigen
-    description: |
-      Antigen is a small set of functions that
-      help you easily manage your shell (zsh) plugins, called bundles.
-    site: "https://github.com/zsh-users/antigen"
-    enabled: false
-  - name: Zinit
-    description: |
-      Zinit is a flexible and fast Zshell plugin manager that will
-      allow you to install everything from GitHub and other sites.
-    site: "https://github.com/zdharma-continuum/zinit"
-    enabled: false
