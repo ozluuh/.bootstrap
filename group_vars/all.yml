@@ -9,6 +9,7 @@ extra_deps: []
 # On Linux: native packages
 # On Mac: brew/ports tools
 common_deps:
+  - age # age-encryption.org
   - bat # github.com/sharkdp/bat
   - curl # curl.se/
   - eza # github.com/eza-community/eza
