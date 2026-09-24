@@ -1,0 +1,28 @@
+---
+# roles/linux_setup/tasks/main.yml
+- name: "Configure: 'Linux' environment"
+  block:
+    - name: "Service: 'Arch Linux' services is enabled"
+      when: ansible_facts['distribution'] == "Archlinux"
+      ansible.builtin.systemd_service:
+        name: reflector.timer
+        state: started
+        enabled: true
+
+    - name: "System: 'Locales' is enabled"
+      when: ansible_facts['system'] == "Linux"
+      notify: Generate system locales
+      ansible.builtin.lineinfile:
+        path: /etc/locale.gen
+        regexp: "^#?\\s*{{ item.locale }}\\s+UTF-8"
+        line: "{{ item.locale }} UTF-8"
+        state: present
+      loop:
+        - { locale: 'en_US.UTF-8' }
+        - { locale: 'pt_BR.UTF-8' }
+
+    - name: "System: Change shell to 'ZSH'"
+      notify: Generate system locales
+      ansible.builtin.user:
+        name: "{{ dotfiles_user }}"
+        shell: /bin/zsh

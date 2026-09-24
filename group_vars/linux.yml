@@ -2,6 +2,11 @@
 flatpak_packages:
   - be.alexandervanhee.gradia
   - it.mijorus.gearlever
+  - io.github.vikdevelop.SaveDesktop
 
 extra_deps:
   - flatpak
+
+gnome_packages:
+  - gnome-browser-connector
+  - wl-clipboard

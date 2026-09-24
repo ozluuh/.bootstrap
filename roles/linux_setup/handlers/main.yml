@@ -1,0 +1,4 @@
+---
+# roles/linux_setup/handlers/main.yml
+- name: Generate system locales
+  ansible.builtin.command: locale-gen

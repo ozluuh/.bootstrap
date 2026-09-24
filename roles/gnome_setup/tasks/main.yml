@@ -1,0 +1,17 @@
+---
+# roles/gnome_setup/tasks/main.yml
+- name: "Configure: 'GNOME' environment"
+  block:
+    - name: "Install: 'GNOME' packages"
+      ansible.builtin.package:
+        name: "{{ gnome_packages }}"
+        state: present
+
+    - name: "Service: 'GNOME Keyring' is enabled"
+      become: true
+      become_user: "{{ dotfiles_user }}"
+      ansible.builtin.systemd_service:
+        name: gnome-keyring-daemon.service
+        state: started
+        enabled: true
+        scope: user

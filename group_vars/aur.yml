@@ -12,6 +12,9 @@ gpg_keys: [] # remove this 'empty' if have keys, sample below
 native_packages:
   # Terminal
   - bash-completion
+  # Service/Virtualization
+  - podman
+  - podman-compose
   # GUI
   - firefox
   # Tool

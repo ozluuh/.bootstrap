@@ -27,6 +27,14 @@
       tags:
         - always
 
+    - name: "Check: desktop environment"
+      when: ansible_facts['system'] == "Linux"
+      ansible.builtin.stat:
+        path: /usr/bin/gnome-shell
+      register: gnome_check
+      tags:
+        - always
+
   roles:
     - name: bootstrap_dependencies
       tags:
@@ -62,3 +70,19 @@
         - shell
         - console
         - cli
+
+    - name: linux_setup
+      when:
+        - ansible_facts['system'] == "Linux"
+      tags:
+        - linux
+        - desktop_environment
+        - os
+
+    - name: gnome_setup
+      when:
+        - ansible_facts['system'] == "Linux"
+        - gnome_check.stat.exists
+      tags:
+        - gnome
+        - desktop_environment
